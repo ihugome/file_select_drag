@@ -55,8 +55,7 @@
       }
     },
     directives: {
-      drag: function (el, option) {
-        debugger
+      drag: function (el, option, vnode) {
         document.onmousedown = function () {
         // TODO:判断是否有已选文件，有则实现拖拽功能
           var selList = []
@@ -83,6 +82,9 @@
           selDiv.style.top = startY + 'px'
           var _x = null
           var _y = null
+
+          vnode.context.clearEventBubble(evt)
+
           document.onmousemove = function () {
             // TODO:如果出现滚动轴selDiv变化
             evt = window.event || arguments[0]
@@ -116,13 +118,14 @@
                 }
               }
             }
+            vnode.context.clearEventBubble(evt)
           }
 
           document.onmouseup = function () {
             isSelect = false
             if (selDiv) {
               document.body.removeChild(selDiv)
-              this.showSelDiv(selList)
+              vnode.context.showSelDiv(selList)
             }
             selList = null
             _x = null
