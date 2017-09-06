@@ -5,11 +5,11 @@ import List from '@/components/List'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'List',
-      component: List
-    }
-  ]
+    routes: [
+        {
+            path: '/',
+            name: 'List',
+            component: List
+        }
+    ]
 })
