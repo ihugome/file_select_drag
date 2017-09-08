@@ -1,22 +1,26 @@
 <template>
-    <div class='fileContent' v-drag>
-        <div class="fileDiv">file1</div>
-        <div class="fileDiv">file2</div>
-        <div class="fileDiv">file3</div>
-        <div class="fileDiv">file4</div>
-        <div class="fileDiv">file5</div>
-        <div class="fileDiv">file6</div>
-        <div class="fileDiv">file7</div>
-        <div class="fileDiv">file8</div>
-        <div class="fileDiv">file9</div>
-        <div class="fileDiv">file10</div>
-        <div class="fileDiv">file11</div>
-        <div class="fileDiv">file12</div>
-        <div class="fileDiv">file13</div>
-        <div class="fileDiv">file14</div>
-        <div class="fileDiv">file15</div>
-        <div class="fileDiv">file16</div>
-        <div class="fileDiv">file17</div> 
+    <div>
+        <div class ='header'>header</div>
+        <div class ='menu'>menu</div>
+        <div class='fileContent' v-drag>
+            <div class="fileDiv">file1</div>
+            <div class="fileDiv">file2</div>
+            <div class="fileDiv">file3</div>
+            <div class="fileDiv">file4</div>
+            <div class="fileDiv">file5</div>
+            <div class="fileDiv">file6</div>
+            <div class="fileDiv">file7</div>
+            <div class="fileDiv">file8</div>
+            <div class="fileDiv">file9</div>
+            <div class="fileDiv">file10</div>
+            <div class="fileDiv">file11</div>
+            <div class="fileDiv">file12</div>
+            <div class="fileDiv">file13</div>
+            <div class="fileDiv">file14</div>
+            <div class="fileDiv">file15</div>
+            <div class="fileDiv">file16</div>
+            <div class="fileDiv">file17</div> 
+        </div>
     </div>
 </template>
 
@@ -56,11 +60,10 @@
         },
         directives: {
             drag: function (el, option, vnode) {
-                document.onmousedown = function () {
+                el.onmousedown = function () {
                     // TODO:判断是否有已选文件，有则实现拖拽功能
                     var selList = []
                     var fileNodes = el.children
-                    // debugger
                     for (var i = 0; i < fileNodes.length; i++) {
                         if (fileNodes[i].className.indexOf('fileDiv') !== -1) {
                             fileNodes[i].className = 'fileDiv'
@@ -69,12 +72,12 @@
                     }
 
                     var isSelect = true
-                    var evt = window.event || arguments[0]
-                    var startX = (evt.x || evt.clientX)
+                    var evt = event || arguments[0]
+                    var startX = (evt.x || evt.clientX) // 鼠标相对于引起事件的元素的父元素的X坐标
                     var startY = (evt.y || evt.clientY)
                     var selDiv = document.createElement('div')
 
-                    selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #0099FF;background-color:#C3D5ED;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
+                    selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #3a9cfd;background-color:#a8caec;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
 
                     selDiv.id = 'selectDiv'
                     document.body.appendChild(selDiv)
@@ -85,29 +88,33 @@
 
                     vnode.context.clearEventBubble(evt)
 
-                    document.onmousemove = function () {
+                    el.onmousemove = function () {
                         // TODO:如果出现滚动轴selDiv变化
-                        evt = window.event || arguments[0]
+                        evt = event || arguments[0]
                         if (isSelect) {
                             if (selDiv.style.display === 'none') {
                                 selDiv.style.display = ''
                             }
                             _x = (evt.x || evt.clientX)
                             _y = (evt.y || evt.clientY)
+                            // 鼠标移动范围画矩形selDiv，适应左右上下移动的情况
                             selDiv.style.left = Math.min(_x, startX) + 'px'
                             selDiv.style.top = Math.min(_y, startY) + 'px'
                             selDiv.style.width = Math.abs(_x - startX) + 'px'
                             selDiv.style.height = Math.abs(_y - startY) + 'px'
                             var _l = selDiv.offsetLeft
                             var _t = selDiv.offsetTop
-
                             var _w = selDiv.offsetWidth
                             var _h = selDiv.offsetHeight
 
                             for (var i = 0; i < selList.length; i++) {
-                                var sl = selList[i].offsetWidth + selList[i].offsetLeft
-                                var st = selList[i].offsetHeight + selList[i].offsetTop
-                                if (sl > _l && st > _t && selList[i].offsetLeft < _l + _w && selList[i].offsetTop < _t + _h) {
+                                var sl = selList[i].offsetWidth + selList[i].offsetLeft + evt.currentTarget.offsetLeft
+                                var st = selList[i].offsetHeight + selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop
+                                // 判断鼠标移动范围选中的文件，选中用.seled标记
+                                if (sl > _l &&
+                                    st > _t &&
+                                    selList[i].offsetLeft + evt.currentTarget.offsetLeft < _l + _w &&
+                                    selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop < _t + _h) {
                                     if (selList[i].className.indexOf('seled') === -1) {
                                         selList[i].className = selList[i].className + ' seled'
                                     }
@@ -142,6 +149,32 @@
 </script>
 
 <style scoped>
+    .header{
+        width: 100%;
+        height: 50px;
+        background: #666;
+    }
+    .menu{
+        width: 100px;
+        height : -moz-calc(100% - 50px);
+        height : -webkit-calc(100% - 50px);
+        height : calc(100% - 50px);
+        background: #999;
+        position: absolute;
+    }
+    .fileContent{
+        height : -moz-calc(100% - 90px);
+        height : -webkit-calc(100% - 90px);
+        height : calc(100% - 90px);
+        width : -moz-calc(100% - 140px);
+        width : -webkit-calc(100% - 140px);
+        width : calc(100% - 140px);
+        position: absolute;
+        left: 100px;
+        overflow: auto;
+        background: lightyellow;
+        padding: 20px;
+    }
     .fileDiv {
         float: left;
         width: 150px;
@@ -154,7 +187,7 @@
         margin-bottom: 10px;
     }
     .seled {
-        border: 1px solid red;
-        background-color: #D6DFF7;
+        border: 1px solid #b4ceed;
+        background-color: #d9eafe;
     }
 </style>
