@@ -2,7 +2,7 @@
     <div>
         <div class ='header'>header</div>
         <div class ='menu'>menu</div>
-        <div class='fileContent' v-drag>
+        <div class='fileContent' v-drag id='mainContent'>
             <div class="fileDiv">file1</div>
             <div class="fileDiv">file2</div>
             <div class="fileDiv">file3</div>
@@ -73,14 +73,14 @@
 
                     var isSelect = true
                     var evt = event || arguments[0]
-                    var startX = (evt.x || evt.clientX) // 鼠标相对于引起事件的元素的父元素的X坐标
-                    var startY = (evt.y || evt.clientY)
+                    var startX = (evt.x || evt.clientX) - evt.currentTarget.offsetLeft // 鼠标相对于引起事件的元素的父元素的X坐标
+                    var startY = (evt.y || evt.clientY) - evt.currentTarget.offsetTop
+
+                    var vcurrent = document.getElementById('mainContent')
                     var selDiv = document.createElement('div')
-
-                    selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #3a9cfd;background-color:#a8caec;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
-
                     selDiv.id = 'selectDiv'
-                    document.body.appendChild(selDiv)
+                    selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #3a9cfd;background-color:#a8caec;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
+                    vcurrent.appendChild(selDiv)
                     selDiv.style.left = startX + 'px'
                     selDiv.style.top = startY + 'px'
                     var _x = null
@@ -95,8 +95,8 @@
                             if (selDiv.style.display === 'none') {
                                 selDiv.style.display = ''
                             }
-                            _x = (evt.x || evt.clientX)
-                            _y = (evt.y || evt.clientY)
+                            _x = (evt.x || evt.clientX) - evt.currentTarget.offsetLeft
+                            _y = (evt.y || evt.clientY) - evt.currentTarget.offsetTop + evt.currentTarget.scrollTop
                             // 鼠标移动范围画矩形selDiv，适应左右上下移动的情况
                             selDiv.style.left = Math.min(_x, startX) + 'px'
                             selDiv.style.top = Math.min(_y, startY) + 'px'
@@ -107,14 +107,31 @@
                             var _w = selDiv.offsetWidth
                             var _h = selDiv.offsetHeight
 
+                            // for (var i = 0; i < selList.length; i++) {
+                            //     var sl = selList[i].offsetWidth + selList[i].offsetLeft + evt.currentTarget.offsetLeft
+                            //     var st = selList[i].offsetHeight + selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop
+                            //     // 判断鼠标移动范围选中的文件，选中用.seled标记
+                            //     if (sl > _l &&
+                            //         st > _t &&
+                            //         selList[i].offsetLeft + evt.currentTarget.offsetLeft < _l + _w &&
+                            //         selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop < _t + _h) {
+                            //         if (selList[i].className.indexOf('seled') === -1) {
+                            //             selList[i].className = selList[i].className + ' seled'
+                            //         }
+                            //     } else {
+                            //         if (selList[i].className.indexOf('seled') !== -1) {
+                            //             selList[i].className = 'fileDiv'
+                            //         }
+                            //     }
+                            // }
                             for (var i = 0; i < selList.length; i++) {
-                                var sl = selList[i].offsetWidth + selList[i].offsetLeft + evt.currentTarget.offsetLeft
-                                var st = selList[i].offsetHeight + selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop
+                                var sl = selList[i].offsetWidth + selList[i].offsetLeft
+                                var st = selList[i].offsetHeight + selList[i].offsetTop
                                 // 判断鼠标移动范围选中的文件，选中用.seled标记
                                 if (sl > _l &&
                                     st > _t &&
-                                    selList[i].offsetLeft + evt.currentTarget.offsetLeft < _l + _w &&
-                                    selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop < _t + _h) {
+                                    selList[i].offsetLeft < _l + _w &&
+                                    selList[i].offsetTop < _t + _h) {
                                     if (selList[i].className.indexOf('seled') === -1) {
                                         selList[i].className = selList[i].className + ' seled'
                                     }
@@ -131,7 +148,7 @@
                     document.onmouseup = function () {
                         isSelect = false
                         if (selDiv) {
-                            document.body.removeChild(selDiv)
+                            vcurrent.removeChild(selDiv)
                             vnode.context.showSelDiv(selList)
                         }
                         selList = null
@@ -172,7 +189,6 @@
         position: absolute;
         left: 100px;
         overflow: auto;
-        background: lightyellow;
         padding: 20px;
     }
     .fileDiv {
