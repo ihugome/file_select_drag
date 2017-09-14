@@ -56,6 +56,24 @@
                 if (count > 0) {
                     alert('共选择' + count + ' 个文件，分别是：\n' + selInfo)
                 }
+            },
+            checkScroll (evt) {
+                let est = evt.currentTarget.scrollHeight // 实际页面高度
+                let ect = evt.currentTarget.clientHeight // 可见页面高度
+                var t
+                // TODO：存在滚动轴并且鼠标触底，该判断待优化
+                if (est > ect && ect - evt.layerY < 5) {
+                    document.getElementById('mainContent').style.background = 'pink'
+                    // console.log(est, ect, evt.layerY, ect - evt.layerY)
+                    t = setTimeout(this.timedCount(), 1000)
+                } else {
+                    clearTimeout(t)
+                    document.getElementById('mainContent').style.background = 'lightyellow'
+                }
+            },
+            timedCount () {
+                let st = document.getElementById('mainContent').scrollTop
+                document.getElementById('mainContent').scrollTop = st + 10
             }
         },
         directives: {
@@ -74,7 +92,7 @@
                     var isSelect = true
                     var evt = event || arguments[0]
                     var startX = (evt.x || evt.clientX) - evt.currentTarget.offsetLeft // 鼠标相对于引起事件的元素的父元素的X坐标
-                    var startY = (evt.y || evt.clientY) - evt.currentTarget.offsetTop
+                    var startY = (evt.y || evt.clientY) - evt.currentTarget.offsetTop + evt.currentTarget.scrollTop
 
                     var vcurrent = document.getElementById('mainContent')
                     var selDiv = document.createElement('div')
@@ -107,23 +125,6 @@
                             var _w = selDiv.offsetWidth
                             var _h = selDiv.offsetHeight
 
-                            // for (var i = 0; i < selList.length; i++) {
-                            //     var sl = selList[i].offsetWidth + selList[i].offsetLeft + evt.currentTarget.offsetLeft
-                            //     var st = selList[i].offsetHeight + selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop
-                            //     // 判断鼠标移动范围选中的文件，选中用.seled标记
-                            //     if (sl > _l &&
-                            //         st > _t &&
-                            //         selList[i].offsetLeft + evt.currentTarget.offsetLeft < _l + _w &&
-                            //         selList[i].offsetTop + evt.currentTarget.offsetTop - evt.currentTarget.scrollTop < _t + _h) {
-                            //         if (selList[i].className.indexOf('seled') === -1) {
-                            //             selList[i].className = selList[i].className + ' seled'
-                            //         }
-                            //     } else {
-                            //         if (selList[i].className.indexOf('seled') !== -1) {
-                            //             selList[i].className = 'fileDiv'
-                            //         }
-                            //     }
-                            // }
                             for (var i = 0; i < selList.length; i++) {
                                 var sl = selList[i].offsetWidth + selList[i].offsetLeft
                                 var st = selList[i].offsetHeight + selList[i].offsetTop
@@ -142,6 +143,8 @@
                                 }
                             }
                         }
+                        // TODO：触底滚动效果
+                        // vnode.context.checkScroll(evt)
                         vnode.context.clearEventBubble(evt)
                     }
 
@@ -149,7 +152,7 @@
                         isSelect = false
                         if (selDiv) {
                             vcurrent.removeChild(selDiv)
-                            vnode.context.showSelDiv(selList)
+                            // vnode.context.showSelDiv(selList)
                         }
                         selList = null
                         _x = null
