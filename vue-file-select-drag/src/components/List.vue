@@ -3,23 +3,12 @@
         <div class ='header'>header</div>
         <div class ='menu'>menu</div>
         <div class='fileContent' v-drag id='mainContent'>
-            <div class="fileDiv">file1</div>
-            <div class="fileDiv">file2</div>
-            <div class="fileDiv">file3</div>
-            <div class="fileDiv">file4</div>
-            <div class="fileDiv">file5</div>
-            <div class="fileDiv">file6</div>
-            <div class="fileDiv">file7</div>
-            <div class="fileDiv">file8</div>
-            <div class="fileDiv">file9</div>
-            <div class="fileDiv">file10</div>
-            <div class="fileDiv">file11</div>
-            <div class="fileDiv">file12</div>
-            <div class="fileDiv">file13</div>
-            <div class="fileDiv">file14</div>
-            <div class="fileDiv">file15</div>
-            <div class="fileDiv">file16</div>
-            <div class="fileDiv">file17</div> 
+            <div 
+                class="fileDiv" 
+                v-for="(file, index) of files" 
+                :key="file.id"
+                :id='file.id'
+                >{{file.fname}}</div>
         </div>
     </div>
 </template>
@@ -29,6 +18,183 @@
         name: 'list',
         data () {
             return {
+                files: [
+                    {
+                        'groupid': 186301522,
+                        'parentid': 0,
+                        'fname': 'yrtutryur',
+                        'fsize': 0,
+                        'ftype': 'folder',
+                        'ctime': 1505441918,
+                        'mtime': 1505441918,
+                        'store': 1,
+                        'storeid': '',
+                        'fver': 1,
+                        'fsha': '',
+                        'deleted': false,
+                        'id': 3768010404,
+                        'creator':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        },
+                        'modifier':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        }
+                    },
+                    {
+                        'groupid': 186301522,
+                        'parentid': 0,
+                        'fname': 'eeeeee.ppt',
+                        'fsize': 20992,
+                        'ftype': 'file',
+                        'ctime': 1505441937,
+                        'mtime': 1505441937,
+                        'store': 1,
+                        'storeid': 'gXFPqpbt0mAmEyI9AFIAm7gj7L3tJ(bCzmz9lXE4iAXnuhM',
+                        'fver': 1,
+                        'fsha': '9bb823ecbded27e6c2ce6cfd9571388805e7ba13',
+                        'deleted': false,
+                        'id': 3768022278,
+                        'creator':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        },
+                        'modifier':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        }
+                    },
+                    {
+                        'groupid': 186301522,
+                        'parentid': 0,
+                        'fname': 'wwwwww.xls',
+                        'fsize': 7168,
+                        'ftype': 'file',
+                        'ctime': 1505441932,
+                        'mtime': 1505441932,
+                        'store': 1,
+                        'storeid': 'pkOg9Nho0KkLmCxMABwAbPqUZPZl19F6Wm4UYYv1wOVJX3A',
+                        'fver': 1,
+                        'fsha': '6cfa9464f665d7d17a5a6e14618bf5c0e5495f70',
+                        'deleted': false,
+                        'id': 3768018965,
+                        'creator':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        },
+                        'modifier':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        }
+                    },
+                    {
+                        'groupid': 186301522,
+                        'parentid': 0,
+                        'fname': 'qqqqqq.doc',
+                        'fsize': 9216,
+                        'ftype': 'file',
+                        'ctime': 1505441926,
+                        'mtime': 1505441926,
+                        'store': 1,
+                        'storeid': 'w()GoldasNeyy53(ACQAGDpe08atmwvAkIMRmapyQBioSuA',
+                        'fver': 1,
+                        'fsha': '183a5ed3c6ad9b0bc090831199aa724018a84ae0',
+                        'deleted': false,
+                        'id': 3768015630,
+                        'creator':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        },
+                        'modifier':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        }
+                    },
+                    {
+                        'groupid': 186301522,
+                        'parentid': 0,
+                        'fname': 'totoro.jpg',
+                        'fsize': 13581,
+                        'ftype': 'file',
+                        'ctime': 1493015571,
+                        'mtime': 1493015571,
+                        'store': 1,
+                        'storeid': 'vjJ0I9sC7jDgWgd8ADUNFJWV0bRJAQJwi8XP)XeyLL2smwY',
+                        'fver': 1,
+                        'fsha': '149595d1b4490102708bc5cffd77b22cbdac9b06',
+                        'deleted': false,
+                        'id': 2019785973,
+                        'creator':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        },
+                        'modifier':
+                        {
+                            'id': 200295289,
+                            'name': '小箱',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
+                            'corpid': 0
+                        }
+                    },
+                    {
+                        'groupid': 186301522,
+                        'parentid': 0,
+                        'fname': '9楼B座位.jpg',
+                        'fsize': 85430,
+                        'ftype': 'file',
+                        'ctime': 1492421307,
+                        'mtime': 1492421307,
+                        'store': 1,
+                        'storeid': 'oXwAaDB8VBwcaT7fAU22JUXHFcZpgwEYLsGJCcLAZgmlxdU',
+                        'fver': 1,
+                        'fsha': '2545c715c6698301182ec18909c2c06609a5c5d5',
+                        'deleted': false,
+                        'id': 1989807141,
+                        'creator':
+                        {
+                            'id': 196726302,
+                            'name': 'hugo',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/115646548BEA2E714DD4130345EAF3AF/100',
+                            'corpid': 0
+                        },
+                        'modifier':
+                        {
+                            'id': 196726302,
+                            'name': 'hugo',
+                            'avatar': 'https://q.qlogo.cn/qqapp/100360965/115646548BEA2E714DD4130345EAF3AF/100',
+                            'corpid': 0
+                        }
+                    }
+                ],
+                selFile: []
             }
         },
         methods: {
@@ -44,17 +210,14 @@
                     evt.returnValue = false
                 }
             },
-            showSelDiv (arr) {
-                var count = 0
-                var selInfo = ''
-                for (var i = 0; i < arr.length; i++) {
-                    if (arr[i].className.indexOf('seled') !== -1) {
-                        count++
-                        selInfo += arr[i].innerHTML + '\n'
-                    }
-                }
-                if (count > 0) {
-                    alert('共选择' + count + ' 个文件，分别是：\n' + selInfo)
+            getSelFile (selIds) {
+                this.selFile = []
+                selIds.map(selId => {
+                    let file = this.files.find(file => file.id === parseInt(selId))
+                    this.selFile.push(file)
+                })
+                if (selIds.length > 0) {
+                    alert('共选择' + selIds.length + ' 个文件，分别是：\n' + selIds)
                 }
             },
             checkScroll (evt) {
@@ -81,6 +244,7 @@
                 el.onmousedown = function () {
                     // TODO:判断是否有已选文件，有则实现拖拽功能
                     var selList = []
+                    var selIds = []
                     var fileNodes = el.children
                     for (var i = 0; i < fileNodes.length; i++) {
                         if (fileNodes[i].className.indexOf('fileDiv') !== -1) {
@@ -135,10 +299,14 @@
                                     selList[i].offsetTop < _t + _h) {
                                     if (selList[i].className.indexOf('seled') === -1) {
                                         selList[i].className = selList[i].className + ' seled'
+                                        selIds.push(selList[i].id)
                                     }
                                 } else {
                                     if (selList[i].className.indexOf('seled') !== -1) {
                                         selList[i].className = 'fileDiv'
+                                        let selIdsSet = new Set(selIds)
+                                        let plusIdSet = new Set(selList[i].id.split(','))
+                                        selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
                                     }
                                 }
                             }
@@ -152,7 +320,7 @@
                         isSelect = false
                         if (selDiv) {
                             vcurrent.removeChild(selDiv)
-                            // vnode.context.showSelDiv(selList)
+                            vnode.context.getSelFile(selIds)
                         }
                         selList = null
                         _x = null
