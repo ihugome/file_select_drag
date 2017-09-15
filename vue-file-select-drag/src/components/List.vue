@@ -216,9 +216,6 @@
                     let file = this.files.find(file => file.id === parseInt(selId))
                     this.selFile.push(file)
                 })
-                if (selIds.length > 0) {
-                    alert('共选择' + selIds.length + ' 个文件，分别是：\n' + selIds)
-                }
             },
             checkScroll (evt) {
                 let est = evt.currentTarget.scrollHeight // 实际页面高度
@@ -242,93 +239,103 @@
         directives: {
             drag: function (el, option, vnode) {
                 el.onmousedown = function () {
-                    // TODO:判断是否有已选文件，有则实现拖拽功能
-                    var selList = []
-                    var selIds = []
-                    var fileNodes = el.children
-                    for (var i = 0; i < fileNodes.length; i++) {
-                        if (fileNodes[i].className.indexOf('fileDiv') !== -1) {
-                            fileNodes[i].className = 'fileDiv'
-                            selList.push(fileNodes[i])
+                    let goDrag = false
+                    // 判断是否有已选文件且点击位置在该范围文件内，有则实现拖拽功能
+                    if (vnode.context.selFile.length !== 0) {
+                        if (vnode.context.selFile.find(file => file.id === parseInt(event.path[0].id))) {
+                            goDrag = true
                         }
                     }
-
-                    var isSelect = true
-                    var evt = event || arguments[0]
-                    var startX = (evt.x || evt.clientX) - evt.currentTarget.offsetLeft // 鼠标相对于引起事件的元素的父元素的X坐标
-                    var startY = (evt.y || evt.clientY) - evt.currentTarget.offsetTop + evt.currentTarget.scrollTop
-
-                    var vcurrent = document.getElementById('mainContent')
-                    var selDiv = document.createElement('div')
-                    selDiv.id = 'selectDiv'
-                    selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #3a9cfd;background-color:#a8caec;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
-                    vcurrent.appendChild(selDiv)
-                    selDiv.style.left = startX + 'px'
-                    selDiv.style.top = startY + 'px'
-                    var _x = null
-                    var _y = null
-
-                    vnode.context.clearEventBubble(evt)
-
-                    el.onmousemove = function () {
-                        // TODO:如果出现滚动轴selDiv变化
-                        evt = event || arguments[0]
-                        if (isSelect) {
-                            if (selDiv.style.display === 'none') {
-                                selDiv.style.display = ''
+                    if (vnode.context.selFile.length !== 0 && goDrag) {
+                        alert('实现拖拽')
+                        // TODO:拖拽过后需要重置selFile
+                    } else {
+                        var selList = []
+                        var selIds = []
+                        var fileNodes = el.children
+                        for (var i = 0; i < fileNodes.length; i++) {
+                            if (fileNodes[i].className.indexOf('fileDiv') !== -1) {
+                                fileNodes[i].className = 'fileDiv'
+                                selList.push(fileNodes[i])
                             }
-                            _x = (evt.x || evt.clientX) - evt.currentTarget.offsetLeft
-                            _y = (evt.y || evt.clientY) - evt.currentTarget.offsetTop + evt.currentTarget.scrollTop
-                            // 鼠标移动范围画矩形selDiv，适应左右上下移动的情况
-                            selDiv.style.left = Math.min(_x, startX) + 'px'
-                            selDiv.style.top = Math.min(_y, startY) + 'px'
-                            selDiv.style.width = Math.abs(_x - startX) + 'px'
-                            selDiv.style.height = Math.abs(_y - startY) + 'px'
-                            var _l = selDiv.offsetLeft
-                            var _t = selDiv.offsetTop
-                            var _w = selDiv.offsetWidth
-                            var _h = selDiv.offsetHeight
+                        }
+                        var isSelect = true
+                        var evt = event || arguments[0]
+                        var startX = (evt.x || evt.clientX) - evt.currentTarget.offsetLeft // 鼠标相对于引起事件的元素的父元素的X坐标
+                        var startY = (evt.y || evt.clientY) - evt.currentTarget.offsetTop + evt.currentTarget.scrollTop
 
-                            for (var i = 0; i < selList.length; i++) {
-                                var sl = selList[i].offsetWidth + selList[i].offsetLeft
-                                var st = selList[i].offsetHeight + selList[i].offsetTop
-                                // 判断鼠标移动范围选中的文件，选中用.seled标记
-                                if (sl > _l &&
-                                    st > _t &&
-                                    selList[i].offsetLeft < _l + _w &&
-                                    selList[i].offsetTop < _t + _h) {
-                                    if (selList[i].className.indexOf('seled') === -1) {
-                                        selList[i].className = selList[i].className + ' seled'
-                                        selIds.push(selList[i].id)
-                                    }
-                                } else {
-                                    if (selList[i].className.indexOf('seled') !== -1) {
-                                        selList[i].className = 'fileDiv'
-                                        let selIdsSet = new Set(selIds)
-                                        let plusIdSet = new Set(selList[i].id.split(','))
-                                        selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
+                        var vcurrent = document.getElementById('mainContent')
+                        var selDiv = document.createElement('div')
+                        selDiv.id = 'selectDiv'
+                        selDiv.style.cssText = 'position:absolute;width:0px;height:0px;font-size:0px;margin:0px;padding:0px;border:1px dashed #3a9cfd;background-color:#a8caec;z-index:1000;filter:alpha(opacity:60);opacity:0.6;display:none;'
+                        vcurrent.appendChild(selDiv)
+                        selDiv.style.left = startX + 'px'
+                        selDiv.style.top = startY + 'px'
+                        var _x = null
+                        var _y = null
+
+                        vnode.context.clearEventBubble(evt)
+
+                        el.onmousemove = function () {
+                            // TODO:如果出现滚动轴selDiv变化
+                            evt = event || arguments[0]
+                            if (isSelect) {
+                                if (selDiv.style.display === 'none') {
+                                    selDiv.style.display = ''
+                                }
+                                _x = (evt.x || evt.clientX) - evt.currentTarget.offsetLeft
+                                _y = (evt.y || evt.clientY) - evt.currentTarget.offsetTop + evt.currentTarget.scrollTop
+                                // 鼠标移动范围画矩形selDiv，适应左右上下移动的情况
+                                selDiv.style.left = Math.min(_x, startX) + 'px'
+                                selDiv.style.top = Math.min(_y, startY) + 'px'
+                                selDiv.style.width = Math.abs(_x - startX) + 'px'
+                                selDiv.style.height = Math.abs(_y - startY) + 'px'
+                                var _l = selDiv.offsetLeft
+                                var _t = selDiv.offsetTop
+                                var _w = selDiv.offsetWidth
+                                var _h = selDiv.offsetHeight
+
+                                for (var i = 0; i < selList.length; i++) {
+                                    var sl = selList[i].offsetWidth + selList[i].offsetLeft
+                                    var st = selList[i].offsetHeight + selList[i].offsetTop
+                                    // 判断鼠标移动范围选中的文件，选中用.seled标记
+                                    if (sl > _l &&
+                                        st > _t &&
+                                        selList[i].offsetLeft < _l + _w &&
+                                        selList[i].offsetTop < _t + _h) {
+                                        if (selList[i].className.indexOf('seled') === -1) {
+                                            selList[i].className = selList[i].className + ' seled'
+                                            selIds.push(selList[i].id)
+                                        }
+                                    } else {
+                                        if (selList[i].className.indexOf('seled') !== -1) {
+                                            selList[i].className = 'fileDiv'
+                                            let selIdsSet = new Set(selIds)
+                                            let plusIdSet = new Set(selList[i].id.split(','))
+                                            selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
+                                        }
                                     }
                                 }
                             }
+                            // TODO：触底滚动效果
+                            // vnode.context.checkScroll(evt)
+                            vnode.context.clearEventBubble(evt)
                         }
-                        // TODO：触底滚动效果
-                        // vnode.context.checkScroll(evt)
-                        vnode.context.clearEventBubble(evt)
-                    }
 
-                    document.onmouseup = function () {
-                        isSelect = false
-                        if (selDiv) {
-                            vcurrent.removeChild(selDiv)
-                            vnode.context.getSelFile(selIds)
+                        document.onmouseup = function () {
+                            isSelect = false
+                            if (selDiv) {
+                                vcurrent.removeChild(selDiv)
+                                vnode.context.getSelFile(selIds)
+                            }
+                            selList = null
+                            _x = null
+                            _y = null
+                            selDiv = null
+                            startX = null
+                            startY = null
+                            evt = null
                         }
-                        selList = null
-                        _x = null
-                        _y = null
-                        selDiv = null
-                        startX = null
-                        startY = null
-                        evt = null
                     }
                 }
             }
