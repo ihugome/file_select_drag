@@ -310,10 +310,7 @@
                                         if (selList[i].className.indexOf('seled') === -1) {
                                             selList[i].className = selList[i].className + ' seled'
                                             selList[i].setAttribute('draggable', true)
-                                            console.log(selIds)
-                                            console.log(selList[i].id)
                                             selIds.push(parseInt(selList[i].id))
-                                            console.log(selIds)
                                         }
                                     } else {
                                         if (selList[i].className.indexOf('seled') !== -1) {
