@@ -216,6 +216,9 @@
                     let file = this.files.find(file => file.id === parseInt(selId))
                     this.selFile.push(file)
                 })
+                // if (selIds.length > 0) {
+                //     alert('共选择' + selIds.length + ' 个文件，分别是：\n' + selIds)
+                // }
             },
             checkScroll (evt) {
                 let est = evt.currentTarget.scrollHeight // 实际页面高度
@@ -246,7 +249,7 @@
                             goDrag = true
                         }
                     }
-                    if (vnode.context.selFile.length !== 0 && goDrag) {
+                    if (goDrag) {
                         alert('实现拖拽')
                         // TODO:拖拽过后需要重置selFile
                     } else {

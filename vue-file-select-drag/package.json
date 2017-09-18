@@ -1,9 +1,9 @@
 {
   "name": "vue-file-select-drag",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "hugo <wangshaoxia@wps.cn>",
-  "private": true,
+  "description": "Simulation windows system file list selection drag and drop function",
+  "author": "ihugome",
+  "private": false,
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
