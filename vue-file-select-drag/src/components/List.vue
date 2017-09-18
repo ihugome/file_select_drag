@@ -1,14 +1,22 @@
 <template>
     <div>
-        <div class ='header'>header</div>
-        <div class ='menu'>menu</div>
+        <div class='header'>header</div>
+        <div class='menu' @drop='drop($event)' @dragover='dragover($event)'>menu</div>
         <div class='fileContent' v-drag id='mainContent'>
-            <div 
-                class="fileDiv" 
-                v-for="(file, index) of files" 
+            <div
+                class="fileDiv"
+                v-for="(file, index) of files"
                 :key="file.id"
                 :id='file.id'
-                >{{file.fname}}</div>
+            >{{file.fname}}
+            </div>
+        </div>
+        <div id="move">
+            <div class="content">
+                <i></i>
+                <span class="num">{{selIds.length}}</span>
+                <p id="move-path"><a>移动到</a>我的云文档</p>
+            </div>
         </div>
     </div>
 </template>
@@ -33,15 +41,13 @@
                         'fsha': '',
                         'deleted': false,
                         'id': 3768010404,
-                        'creator':
-                        {
+                        'creator': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
                             'corpid': 0
                         },
-                        'modifier':
-                        {
+                        'modifier': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
@@ -62,15 +68,13 @@
                         'fsha': '9bb823ecbded27e6c2ce6cfd9571388805e7ba13',
                         'deleted': false,
                         'id': 3768022278,
-                        'creator':
-                        {
+                        'creator': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
                             'corpid': 0
                         },
-                        'modifier':
-                        {
+                        'modifier': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
@@ -91,15 +95,13 @@
                         'fsha': '6cfa9464f665d7d17a5a6e14618bf5c0e5495f70',
                         'deleted': false,
                         'id': 3768018965,
-                        'creator':
-                        {
+                        'creator': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
                             'corpid': 0
                         },
-                        'modifier':
-                        {
+                        'modifier': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
@@ -120,15 +122,13 @@
                         'fsha': '183a5ed3c6ad9b0bc090831199aa724018a84ae0',
                         'deleted': false,
                         'id': 3768015630,
-                        'creator':
-                        {
+                        'creator': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
                             'corpid': 0
                         },
-                        'modifier':
-                        {
+                        'modifier': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
@@ -149,15 +149,13 @@
                         'fsha': '149595d1b4490102708bc5cffd77b22cbdac9b06',
                         'deleted': false,
                         'id': 2019785973,
-                        'creator':
-                        {
+                        'creator': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
                             'corpid': 0
                         },
-                        'modifier':
-                        {
+                        'modifier': {
                             'id': 200295289,
                             'name': '小箱',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/23FF7C8210951E921DBC934AEECD7871/100',
@@ -178,15 +176,13 @@
                         'fsha': '2545c715c6698301182ec18909c2c06609a5c5d5',
                         'deleted': false,
                         'id': 1989807141,
-                        'creator':
-                        {
+                        'creator': {
                             'id': 196726302,
                             'name': 'hugo',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/115646548BEA2E714DD4130345EAF3AF/100',
                             'corpid': 0
                         },
-                        'modifier':
-                        {
+                        'modifier': {
                             'id': 196726302,
                             'name': 'hugo',
                             'avatar': 'https://q.qlogo.cn/qqapp/100360965/115646548BEA2E714DD4130345EAF3AF/100',
@@ -194,10 +190,22 @@
                         }
                     }
                 ],
-                selFile: []
+                selIds: []
             }
         },
         methods: {
+            dragover: function (event) {
+                event.stopPropagation()
+                event.preventDefault()
+            },
+            drop: function (event) {
+                event.stopPropagation()
+                event.preventDefault()
+                this.files = this.files.filter(file => {
+                    return this.selIds.indexOf(file.id) === -1
+                })
+                this.selIds = []
+            },
             clearEventBubble (evt) {
                 if (evt.stopPropagation) {
                     evt.stopPropagation()
@@ -210,13 +218,7 @@
                     evt.returnValue = false
                 }
             },
-            getSelFile (selIds) {
-                this.selFile = []
-                selIds.map(selId => {
-                    let file = this.files.find(file => file.id === parseInt(selId))
-                    this.selFile.push(file)
-                })
-            },
+
             checkScroll (evt) {
                 let est = evt.currentTarget.scrollHeight // 实际页面高度
                 let ect = evt.currentTarget.clientHeight // 可见页面高度
@@ -241,14 +243,17 @@
                 el.onmousedown = function () {
                     let goDrag = false
                     // 判断是否有已选文件且点击位置在该范围文件内，有则实现拖拽功能
-                    if (vnode.context.selFile.length !== 0) {
-                        if (vnode.context.selFile.find(file => file.id === parseInt(event.path[0].id))) {
+                    if (vnode.context.selIds.length !== 0) {
+                        if (vnode.context.selIds.find(id => id === parseInt(event.path[0].id))) {
                             goDrag = true
                         }
                     }
-                    if (vnode.context.selFile.length !== 0 && goDrag) {
-                        alert('实现拖拽')
-                        // TODO:拖拽过后需要重置selFile
+                    if (goDrag) {
+                        el.ondragstart = function (event) {
+                            event.dataTransfer.setData('Text', JSON.stringify(this.files))
+                            let id = document.getElementById('move')
+                            event.dataTransfer.setDragImage(id, 0, 0)
+                        }
                     } else {
                         var selList = []
                         var selIds = []
@@ -305,11 +310,16 @@
                                         selList[i].offsetTop < _t + _h) {
                                         if (selList[i].className.indexOf('seled') === -1) {
                                             selList[i].className = selList[i].className + ' seled'
-                                            selIds.push(selList[i].id)
+                                            selList[i].setAttribute('draggable', true)
+                                            console.log(selIds)
+                                            console.log(selList[i].id)
+                                            selIds.push(parseInt(selList[i].id))
+                                            console.log(selIds)
                                         }
                                     } else {
                                         if (selList[i].className.indexOf('seled') !== -1) {
                                             selList[i].className = 'fileDiv'
+                                            selList[i].setAttribute('draggable', false)
                                             let selIdsSet = new Set(selIds)
                                             let plusIdSet = new Set(selList[i].id.split(','))
                                             selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
@@ -319,14 +329,14 @@
                             }
                             // TODO：触底滚动效果
                             // vnode.context.checkScroll(evt)
-                            vnode.context.clearEventBubble(evt)
+                            // vnode.context.clearEventBubble(evt)
                         }
 
                         document.onmouseup = function () {
                             isSelect = false
                             if (selDiv) {
                                 vcurrent.removeChild(selDiv)
-                                vnode.context.getSelFile(selIds)
+                                vnode.context.selIds = selIds
                             }
                             selList = null
                             _x = null
@@ -343,32 +353,29 @@
     }
 </script>
 
-<style scoped>
-    .header{
+<style lang="less" rel="stylesheet/less" scoped>
+    .header {
         width: 100%;
         height: 50px;
         background: #666;
     }
-    .menu{
+
+    .menu {
         width: 100px;
-        height : -moz-calc(100% - 50px);
-        height : -webkit-calc(100% - 50px);
-        height : calc(100% - 50px);
+        height: calc(~ "100% - 50px");
         background: #999;
         position: absolute;
     }
-    .fileContent{
-        height : -moz-calc(100% - 90px);
-        height : -webkit-calc(100% - 90px);
-        height : calc(100% - 90px);
-        width : -moz-calc(100% - 140px);
-        width : -webkit-calc(100% - 140px);
-        width : calc(100% - 140px);
+
+    .fileContent {
+        height: calc(~ "100% - 90px");
+        width: calc(~ "100% - 140px");
         position: absolute;
         left: 100px;
         overflow: auto;
         padding: 20px;
     }
+
     .fileDiv {
         float: left;
         width: 150px;
@@ -380,8 +387,42 @@
         margin-right: 10px;
         margin-bottom: 10px;
     }
+
     .seled {
         border: 1px solid #b4ceed;
         background-color: #d9eafe;
+    }
+
+    #move {
+        position: absolute;
+        top: -10000px;
+        left: -10000px;
+        .content {
+            position: relative;
+            width: 150px;
+            i {
+                background: pink;
+                width: 50px;
+                height: 50px;
+                display: block;
+                border-radius: 3px;
+            }
+            span {
+                &.num {
+                    display: block;
+                    width: 20px;
+                    height: 20px;
+                    line-height: 20px;
+                    background: dodgerblue;
+                    border-radius: 50%;
+                    position: absolute;
+                    top: 30px;
+                    left: 30px;
+                }
+            }
+            #move-path {
+                display: none;
+            }
+        }
     }
 </style>
