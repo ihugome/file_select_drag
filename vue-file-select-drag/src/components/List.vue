@@ -218,7 +218,6 @@
                     evt.returnValue = false
                 }
             },
-
             checkScroll (evt) {
                 let est = evt.currentTarget.scrollHeight // 实际页面高度
                 let ect = evt.currentTarget.clientHeight // 可见页面高度
