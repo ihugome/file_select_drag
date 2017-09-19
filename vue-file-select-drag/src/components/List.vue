@@ -298,8 +298,8 @@
                         var _y = null
 
                         vnode.context.clearEventBubble(evt)
-
-                        el.onmousemove = function () {
+                        let mouseMove = function () {
+                            console.log(1)
                             // TODO:如果出现滚动轴selDiv变化
                             evt = event || arguments[0]
                             if (isSelect) {
@@ -346,8 +346,10 @@
                             }
                             // TODO：触底滚动效果
                             // vnode.context.checkScroll(evt)
-                            // vnode.context.clearEventBubble(evt)
+                            vnode.context.clearEventBubble(evt)
                         }
+
+                        el.addEventListener('mousemove', mouseMove, false)
 
                         document.onmouseup = function () {
                             isSelect = false
@@ -363,6 +365,7 @@
                             startX = null
                             startY = null
                             evt = null
+                            el.removeEventListener('mousemove', mouseMove, false)
                         }
                     }
                 }
