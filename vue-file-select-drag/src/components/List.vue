@@ -239,6 +239,8 @@
         },
         directives: {
             drag: function (el, option, vnode) {
+                // TODO:区分单击事件跟拖拽事件
+
                 el.onmousedown = function () {
                     let goDrag = false
                     // 判断是否有已选文件且点击位置在该范围文件内，有则实现拖拽功能
@@ -316,8 +318,10 @@
                                         if (selList[i].className.indexOf('seled') !== -1) {
                                             selList[i].className = 'fileDiv'
                                             selList[i].setAttribute('draggable', false)
+                                            let plusId = selList[i].id.split(',')
+                                            plusId[0] = parseInt(plusId[0])
                                             let selIdsSet = new Set(selIds)
-                                            let plusIdSet = new Set(selList[i].id.split(','))
+                                            let plusIdSet = new Set(plusId)
                                             selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
                                         }
                                     }
@@ -332,7 +336,7 @@
                             isSelect = false
                             if (selDiv) {
                                 vcurrent.removeChild(selDiv)
-                                vnode.context.selIds = selIds
+                                // alert('共选择' + selIds.length + ' 个文件，分别是：\n' + selIds)
                             }
                             selList = null
                             _x = null
