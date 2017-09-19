@@ -7,10 +7,10 @@
             <div
                 class="fileDiv"
                 v-for="(file, index) of files"
-                @drop="file.ftype === 'folder' ? drop($event) : ''"
-                @dragover="file.ftype === 'folder' ? dragover($event) : ''"
-                @dragenter="file.ftype === 'folder' ? dragenter($event) : ''"
-                @dragleave="file.ftype === 'folder' ? dragleave($event) : ''"
+                @drop="handleDrop($event, file, index) ? drop($event) : ''"
+                @dragover="handleDrop($event, file, index) ? dragover($event) : ''"
+                @dragenter="handleDrop($event, file, index) ? dragenter($event) : ''"
+                @dragleave="handleDrop($event, file, index) ? dragleave($event) : ''"
                 :key="file.id"
                 :id='file.id'
             >{{file.fname}}
@@ -200,6 +200,12 @@
             }
         },
         methods: {
+            handleDrop: function (event, file, index) {
+                if (event.target.getAttribute('draggable') !== 'true' && file.ftype === 'folder') {
+                    return true
+                }
+                return false
+            },
             dragover: function (event) {
                 event.stopPropagation()
                 event.preventDefault()
@@ -271,7 +277,7 @@
                         el.ondragstart = function (event) {
                             event.dataTransfer.setData('Text', JSON.stringify(this.files))
                             let id = document.getElementById('move')
-                            event.dataTransfer.setDragImage(id, 0, 0)
+                            event.dataTransfer.setDragImage(id, 25, 50)
                         }
                     } else {
                         var selList = []
@@ -280,6 +286,7 @@
                         for (var i = 0; i < fileNodes.length; i++) {
                             if (fileNodes[i].className.indexOf('fileDiv') !== -1) {
                                 fileNodes[i].className = 'fileDiv'
+                                fileNodes[i].setAttribute('draggable', false)
                                 selList.push(fileNodes[i])
                             }
                         }
