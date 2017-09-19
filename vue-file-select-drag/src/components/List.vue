@@ -240,7 +240,6 @@
         directives: {
             drag: function (el, option, vnode) {
                 // TODO:区分单击事件跟拖拽事件
-
                 el.onmousedown = function () {
                     let goDrag = false
                     // 判断是否有已选文件且点击位置在该范围文件内，有则实现拖拽功能
@@ -336,6 +335,7 @@
                             isSelect = false
                             if (selDiv) {
                                 vcurrent.removeChild(selDiv)
+                                vnode.context.selIds = selIds
                                 // alert('共选择' + selIds.length + ' 个文件，分别是：\n' + selIds)
                             }
                             selList = null
