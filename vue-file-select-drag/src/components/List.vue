@@ -31,6 +31,7 @@
         name: 'list',
         data () {
             return {
+                hasMove: false, // 区分单击事件跟拖拽事件hasMove
                 files: [
                     {
                         'groupid': 186301522,
@@ -257,8 +258,8 @@
         },
         directives: {
             drag: function (el, option, vnode) {
-                // TODO:区分单击事件跟拖拽事件
                 el.onmousedown = function () {
+                    vnode.context.hasMove = false
                     let goDrag = false
                     // 判断是否有已选文件且点击位置在该范围文件内，有则实现拖拽功能
                     if (vnode.context.selIds.length !== 0) {
@@ -274,7 +275,7 @@
                         }
                     } else {
                         var selList = []
-                        var selIds = []
+                        vnode.context.selIds = []
                         var fileNodes = el.children
                         for (var i = 0; i < fileNodes.length; i++) {
                             if (fileNodes[i].className.indexOf('fileDiv') !== -1) {
@@ -300,6 +301,7 @@
                         vnode.context.clearEventBubble(evt)
 
                         el.onmousemove = function () {
+                            vnode.context.hasMove = true
                             // TODO:如果出现滚动轴selDiv变化
                             evt = event || arguments[0]
                             if (isSelect) {
@@ -329,7 +331,7 @@
                                         if (selList[i].className.indexOf('seled') === -1) {
                                             selList[i].className = selList[i].className + ' seled'
                                             selList[i].setAttribute('draggable', true)
-                                            selIds.push(parseInt(selList[i].id))
+                                            vnode.context.selIds.push(parseInt(selList[i].id))
                                         }
                                     } else {
                                         if (selList[i].className.indexOf('seled') !== -1) {
@@ -337,9 +339,9 @@
                                             selList[i].setAttribute('draggable', false)
                                             let plusId = selList[i].id.split(',')
                                             plusId[0] = parseInt(plusId[0])
-                                            let selIdsSet = new Set(selIds)
+                                            let selIdsSet = new Set(vnode.context.selIds)
                                             let plusIdSet = new Set(plusId)
-                                            selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
+                                            vnode.context.selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
                                         }
                                     }
                                 }
@@ -350,12 +352,23 @@
                         }
 
                         document.onmouseup = function () {
-                            isSelect = false
+                            // 单击事件
+                            if (!vnode.context.hasMove) {
+                                var fileNodes = document.getElementById('mainContent').children
+                                for (var i = 0; i < fileNodes.length; i++) {
+                                    fileNodes[i].className = 'fileDiv'
+                                    if (fileNodes[i].id === event.path[0].id) {
+                                        fileNodes[i].className = fileNodes[i].className + ' seled'
+                                        fileNodes[i].setAttribute('draggable', true)
+                                    }
+                                }
+                                vnode.context.selIds = [(parseInt(event.path[0].id))]
+                            }
                             if (selDiv) {
                                 vcurrent.removeChild(selDiv)
-                                vnode.context.selIds = selIds
                                 // alert('共选择' + selIds.length + ' 个文件，分别是：\n' + selIds)
                             }
+                            isSelect = false
                             selList = null
                             _x = null
                             _y = null
@@ -363,6 +376,7 @@
                             startX = null
                             startY = null
                             evt = null
+                            vnode.context.hasMove = false
                         }
                     }
                 }
