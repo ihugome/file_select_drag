@@ -1,11 +1,16 @@
 <template>
     <div>
         <div class='header'>header</div>
-        <div class='menu' @drop='drop($event)' @dragover='dragover($event)'>menu</div>
+        <div class='menu' @drop='drop($event)' @dragover='dragover($event)' @dragenter="dragover($event)"
+            @dragleave="dragover($event)">menu</div>
         <div class='fileContent' v-drag id='mainContent'>
             <div
                 class="fileDiv"
                 v-for="(file, index) of files"
+                @drop="file.ftype === 'folder' ? drop($event) : ''"
+                @dragover="file.ftype === 'folder' ? dragover($event) : ''"
+                @dragenter="file.ftype === 'folder' ? dragenter($event) : ''"
+                @dragleave="file.ftype === 'folder' ? dragleave($event) : ''"
                 :key="file.id"
                 :id='file.id'
             >{{file.fname}}
@@ -198,9 +203,22 @@
                 event.stopPropagation()
                 event.preventDefault()
             },
+            dragenter: function (event) {
+                if (event.target.className === 'fileDiv') {
+                    event.target.className = event.target.className + ' seled'
+                }
+            },
+            dragleave: function (event, item) {
+                if (event.target.className === 'fileDiv') {
+                    event.target.className = 'fileDiv'
+                }
+            },
             drop: function (event) {
                 event.stopPropagation()
                 event.preventDefault()
+                if (event.target.className === 'fileDiv') {
+                    event.target.className = 'fileDiv'
+                }
                 this.files = this.files.filter(file => {
                     return this.selIds.indexOf(file.id) === -1
                 })
@@ -318,7 +336,7 @@
                                             selList[i].setAttribute('draggable', false)
                                             let selIdsSet = new Set(selIds)
                                             let plusIdSet = new Set(selList[i].id.split(','))
-                                            selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(x))))
+                                            selIds = Array.from(new Set([...selIdsSet].filter(x => !plusIdSet.has(String(x)))))
                                         }
                                     }
                                 }
